@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import { tw } from "./tw";
+import HomePage from "./components/home";
+import UploadLookPage from "./components/uploadLook";
+import CreateLookPage from "./components/combine";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const queryClient = new QueryClient();
+  const location = useLocation();
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <QueryClientProvider client={queryClient}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <div className="bg-white w-86 min-h-screen font-sans">
+        <nav>
+          <div className="flex justify-center bg-white p-5 text-gray-800 font-medium text-md items-center shadow-md">
+            <div className="grid grid-rows-2 grid-flow-row gap-6 mt-4">
+              <Link to="/" className="flex justify-center items-center text-xl">
+                OUTFITTER
+                <img src="/heart.png" className="h-8 w-8 ml-2" />
+              </Link>
+              <div className="flex justify-between text-gray-500">
+                <Link to="/" className={tw( 
+                  "flex justify-center align-center mx-4",
+                  location.pathname === "/" && "text-red-700",
+                )}>
+                  EXPLORE
+                </Link>
+                <Link to="/upload/look" className={tw( 
+                  "flex justify-center align-center mr-4",
+                  location.pathname === "/upload/look" && "text-red-700",
+                )}>
+                  UPLOAD
+                </Link>
+                <Link to="/create/look" className={tw( 
+                  "flex justify-center align-center mr-4",
+                  location.pathname === "/create/look" && "text-red-700",
+                )}>
+                  MIX & MATCH
+                </Link>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/upload/look" element={<UploadLookPage />}/>
+          <Route path="/create/look" element={<CreateLookPage />}/>
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
